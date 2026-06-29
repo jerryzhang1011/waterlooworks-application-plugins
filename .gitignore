@@ -19,7 +19,7 @@ coverletter-config.json
 /coverletter/*
 !/coverletter/example-coverletter.pdf
 # Scraped job descriptions
-/jds/
+
 .tmp-jd-*.md
 # Logged interactive answers
 .codex_user_input_log.jsonl
