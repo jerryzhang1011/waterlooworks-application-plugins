@@ -10,41 +10,47 @@ You don't need to know how to code. You point your AI coding assistant (Claude C
 
 ## 🚀 Get started (no coding required)
 
-You need one of these AI assistants installed first:
-- **[Claude Code](https://claude.com/claude-code)**, or
-- **[Codex](https://developers.openai.com/codex)**
+**Pick the AI assistant you use — each has its own short, step-by-step guide:**
 
-Open it in **any empty folder** on your computer, then **copy the prompt below and paste it in.** Your assistant will handle the rest.
+### 🟣 I use Claude Code → **[Install on Claude Code](docs/install-claude-code.md)**
 
+Quick version — type these two commands in Claude Code:
 ```text
-I'm a University of Waterloo student and I want to use you to help me apply to
-jobs on WaterlooWorks. I'm not a programmer, so please do all the technical
-steps for me and explain each step in plain language.
-
-1. Clone https://github.com/jerryzhang1011/waterlooworks-application-plugins
-   into this folder.
-
-2. Install the "waterlooworks-jobs" plugin from the cloned repo for whichever
-   assistant you are:
-   - If you are Claude Code: add the plugin marketplace from the cloned repo
-     folder, then install the waterlooworks-jobs plugin, and reload so the
-     skills become available.
-   - If you are Codex: add the plugin from .agents/plugins/marketplace.json in
-     the cloned repo.
-
-3. Run the ww-setup skill to check my computer and install any tools the
-   skills need (it will ask before anything big).
-
-4. Help me create my own coverletter-config.json and add my résumé PDF, using
-   the example files in the repo's resume/ and coverletter/ folders as a
-   template. Use MY real details
-   — and remind me they stay on my computer and are never uploaded.
-
-5. When everything is ready, tell me how to scrape jobs, write a cover letter,
-   and apply to a job.
+/plugin marketplace add jerryzhang1011/waterlooworks-application-plugins
+/plugin install waterlooworks-jobs@uwaterloo-jobs
 ```
 
-That's it. After setup, you can ask in plain English:
+### 🟢 I use Codex → **[Install on Codex](docs/install-codex.md)**
+
+Quick version — add the marketplace, then install from the plugin browser:
+```text
+codex plugin marketplace add jerryzhang1011/waterlooworks-application-plugins
+```
+then run `/plugins`, open **WaterlooWorks Jobs**, and click **Install**.
+
+> Don't have an assistant yet? Get **[Claude Code](https://claude.com/claude-code)** or **[Codex](https://developers.openai.com/codex)** first. Both guides assume you're brand new and not a programmer.
+
+### Then: finish setup (works the same on both)
+
+Once the plugin is installed, paste this to your assistant:
+
+```text
+I'm a University of Waterloo student and I'm not a programmer. I just installed
+the waterlooworks-jobs plugin. Please finish setting me up and explain each
+step simply:
+
+1. Run the ww-setup skill to check my computer and install any tools the skills
+   need (ask me before anything big).
+
+2. Help me put my résumé PDF in a resume/ folder and create my
+   coverletter-config.json, using the example files in this repo as a template
+   (resume/example-resume.pdf and coverletter-config.example.json). Use MY real
+   details — and remind me they stay on my computer and are never uploaded.
+
+3. Tell me how to scrape jobs, write a cover letter, and apply to a job.
+```
+
+That's it. After setup, you can just ask in plain English:
 
 - *"Scrape WaterlooWorks jobs for my program."*
 - *"Write a cover letter for job 475135 using my résumé."*
