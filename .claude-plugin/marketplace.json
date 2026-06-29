@@ -1,0 +1,31 @@
+{
+  "name": "uwaterloo-jobs",
+  "owner": {
+    "name": "WaterlooWorks Jobs contributors",
+    "url": "https://github.com/jerryzhang1011/waterlooworks-application-plugins"
+  },
+  "metadata": {
+    "description": "Claude Code plugins for University of Waterloo students applying to jobs on WaterlooWorks.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "waterlooworks-jobs",
+      "source": "./plugins/waterlooworks-jobs",
+      "description": "Scrape WaterlooWorks job descriptions, draft tailored cover letters, restore the login session, upload documents, and submit Full-Cycle Service applications — for any student, program, or work term.",
+      "version": "0.1.0",
+      "author": {
+        "name": "WaterlooWorks Jobs contributors"
+      },
+      "category": "productivity",
+      "keywords": [
+        "waterlooworks",
+        "uwaterloo",
+        "co-op",
+        "internship",
+        "job-search",
+        "cover-letter"
+      ]
+    }
+  ]
+}

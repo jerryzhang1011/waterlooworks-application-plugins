@@ -1,0 +1,22 @@
+{
+  "name": "waterlooworks-jobs",
+  "version": "0.1.0",
+  "description": "WaterlooWorks job-application automation for any University of Waterloo student, program, or work term: scrape job descriptions, draft tailored cover letters, restore the login session, upload documents, and submit Full-Cycle Service applications.",
+  "author": {
+    "name": "WaterlooWorks Jobs contributors",
+    "url": "https://github.com/jerryzhang1011/waterlooworks-application-plugins"
+  },
+  "homepage": "https://github.com/jerryzhang1011/waterlooworks-application-plugins/tree/main/plugins/waterlooworks-jobs",
+  "repository": "https://github.com/jerryzhang1011/waterlooworks-application-plugins",
+  "license": "MIT",
+  "keywords": [
+    "waterlooworks",
+    "uwaterloo",
+    "co-op",
+    "internship",
+    "job-search",
+    "cover-letter",
+    "automation",
+    "students"
+  ]
+}

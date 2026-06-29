@@ -1,0 +1,4 @@
+interface:
+  display_name: "Upload Cover Letter"
+  short_description: "Upload cover letters in WaterlooWorks"
+  default_prompt: "Use $ww-upload-cover-letter to upload coverletter/<Company>-coverletter.pdf into a required WaterlooWorks cover-letter slot."

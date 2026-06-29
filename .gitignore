@@ -1,0 +1,24 @@
+# OS cruft
+.DS_Store
+**/.DS_Store
+
+# Python build artifacts
+__pycache__/
+*.pyc
+
+# ---------------------------------------------------------------------------
+# Personal application data — NEVER commit. The plugin writes these into your
+# own working directory while you use it; they contain your private details.
+# ---------------------------------------------------------------------------
+# Your real cover-letter header (only the example .json belongs in git)
+coverletter-config.json
+# Generated cover letters
+*-coverletter.pdf
+coverletter/
+# Your résumé PDFs (only files under examples/ belong in git)
+/resume/
+# Scraped job descriptions
+/jds/
+.tmp-jd-*.md
+# Logged interactive answers
+.codex_user_input_log.jsonl

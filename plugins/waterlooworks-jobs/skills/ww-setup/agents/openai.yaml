@@ -1,0 +1,4 @@
+interface:
+  display_name: "WaterlooWorks Setup"
+  short_description: "Install the tools the WaterlooWorks skills need"
+  default_prompt: "Use $ww-setup to check and install everything the WaterlooWorks skills require on this machine."

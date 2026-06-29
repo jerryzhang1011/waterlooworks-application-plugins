@@ -1,0 +1,4 @@
+interface:
+  display_name: "WaterlooWorks JD Scraper"
+  short_description: "Scrape WaterlooWorks jobs to cycle folders"
+  default_prompt: "Use $ww-scrape-jobs to scrape WaterlooWorks job descriptions for the next cycle."

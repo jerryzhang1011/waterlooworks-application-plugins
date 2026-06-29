@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apply WW By Job ID"
+  short_description: "Apply to WaterlooWorks jobs by ID"
+  default_prompt: "Use $ww-apply-to-job to apply to WaterlooWorks job <job-id> with resume <resume-name>."

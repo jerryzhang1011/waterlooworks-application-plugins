@@ -1,0 +1,48 @@
+{
+  "skill_name": "ww-setup",
+  "evals": [
+    {
+      "id": 0,
+      "name": "real-init-happy-path",
+      "prompt": "Initialize this project for me — make sure every tool the skills in .claude/skills need is actually installed on this machine.",
+      "expected_output": "Runs the dependency checker against .claude/skills, reports that python3, node, and reportlab are all present, identifies the Claude-in-Chrome MCP server as something the user must connect (not CLI-installable), installs nothing (nothing is missing), and gives an honest summary that does NOT claim the project is 100% ready while the MCP server is unconnected.",
+      "files": [],
+      "assertions": [
+        "Runs check_skill_deps.py (or otherwise inspects .claude/skills) rather than guessing dependencies",
+        "Reports python3 as already installed",
+        "Reports node as already installed",
+        "Reports reportlab as already installed",
+        "Identifies the Claude in Chrome MCP server as a dependency the user must connect themselves",
+        "Does NOT run any pip/npm/brew install command (everything CLI-installable is already present)",
+        "Final summary is honest: it does not claim the project is fully ready while the Chrome MCP is still unconnected"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "fresh-clone-full-policy",
+      "prompt": "I just cloned a repo whose skills live in .claude/skills/ww-setup/evals/fixtures/fresh-skills. Set it up so those skills will run — install whatever they need.",
+      "expected_output": "Runs the checker against the fixture root, then applies the install policy: auto-installs the missing pip package (pyfiglet) WITHOUT asking, does NOT silently run `npm install -g cowsay` (flags it for confirmation since it's a heavy/global install), and hands the Claude-in-Chrome MCP server off to the user as something only they can connect. Final report distinguishes the three outcomes.",
+      "files": [],
+      "assertions": [
+        "Runs check_skill_deps.py with --root pointing at the fixture folder (fresh-skills)",
+        "Auto-installs the missing pip package pyfiglet via pip without first asking the user for permission",
+        "Does NOT run `npm install -g cowsay`; instead surfaces it as needing user confirmation before a heavy/global install",
+        "Hands the Claude in Chrome MCP server off to the user (does not attempt to install it from the CLI)",
+        "Final summary clearly separates what was auto-installed, what needs confirmation, and what the user must connect"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "will-scraper-run-honest-report",
+      "prompt": "Will the WaterlooWorks scraper actually run on this laptop, or am I missing something?",
+      "expected_output": "Checks the dependencies for ww-scrape-jobs, confirms the CLI tools it needs (node, python3) are present, but clearly surfaces that it additionally requires the Claude-in-Chrome MCP server to be connected — so the honest answer is 'not yet / only once the browser connector is set up', not an unqualified yes.",
+      "files": [],
+      "assertions": [
+        "Inspects the actual dependencies of the scraper (via the checker) instead of guessing",
+        "Confirms node and python3 are installed",
+        "Surfaces that the scraper requires the Claude in Chrome MCP server to be connected",
+        "Does NOT give an unqualified 'yes it will run' that ignores the unconnected Chrome MCP requirement"
+      ]
+    }
+  ]
+}

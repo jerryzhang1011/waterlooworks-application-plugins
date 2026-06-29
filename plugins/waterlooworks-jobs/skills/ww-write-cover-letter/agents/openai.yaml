@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Cover Letter"
+  short_description: "Generate a tailored one-page cover letter PDF"
+  default_prompt: "Use $ww-write-cover-letter to create a tailored one-page <Company>-coverletter.pdf in the coverletter/ folder from a WaterlooWorks job id and one of my resumes."

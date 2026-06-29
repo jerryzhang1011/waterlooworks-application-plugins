@@ -1,0 +1,4 @@
+interface:
+  display_name: "WaterlooWorks Login"
+  short_description: "Refresh WaterlooWorks login session"
+  default_prompt: "Use $ww-login to restore a WaterlooWorks session before continuing."

@@ -1,0 +1,29 @@
+{
+  "name": "waterlooworks-jobs",
+  "version": "0.1.0",
+  "description": "WaterlooWorks job search automation skills for student applications.",
+  "author": {
+    "name": "WaterlooWorks Jobs contributors"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "WaterlooWorks Jobs",
+    "shortDescription": "Scrape, write, upload, and submit WaterlooWorks applications.",
+    "longDescription": "WaterlooWorks Jobs packages skills for students to scrape job descriptions, draft tailored cover letters, upload documents, restore login sessions, and apply to Full-Cycle Service jobs across work terms.",
+    "developerName": "WaterlooWorks Jobs contributors",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "brandColor": "#0072CE",
+    "composerIcon": "./assets/waterlooworks-icon.png",
+    "logo": "./assets/waterlooworks-icon.png",
+    "logoDark": "./assets/waterlooworks-icon.png",
+    "defaultPrompt": [
+      "Scrape WaterlooWorks job descriptions.",
+      "Write a tailored cover letter.",
+      "Apply to a WaterlooWorks job ID."
+    ]
+  }
+}
