@@ -33,19 +33,15 @@ then run `/plugins`, open **WaterlooWorks Jobs**, and click **Install**.
 Once the plugin is installed, paste this to your assistant:
 
 ```text
-I'm a University of Waterloo student and I'm not a programmer. I just installed
-the waterlooworks-jobs plugin. Please finish setting me up and explain each
+I'm a University of Waterloo student. I just installed
+the waterlooworks-jobs plugin. Please finish setting me up and explain each.
 step simply:
 
-1. Run the ww-setup skill to check my computer and install any tools the skills
-   need (ask me before anything big).
+1. Run the ww-setup skill to check my computer and install any tools the skills need (ask me before anything big).
 
-2. Help me put my résumé PDF in a resume/ folder and create my
-   coverletter-config.json, using the example files in this repo as a template
-   (resume/example-resume.pdf and coverletter-config.example.json). Use MY real
-   details — and remind me they stay on my computer and are never uploaded.
+2. Help me put my résumé PDF in a resume/ folder and create my coverletter-config.json, using the example files in this repo as a template (resume/example-resume.pdf and coverletter-config.example.json). Use MY real details — and remind me they stay on my computer and are never uploaded.
 
-3. Tell me how to scrape jobs, write a cover letter, and apply to a job.
+3. Explain how to use this plugin
 ```
 
 That's it. After setup, you can just ask in plain English:
