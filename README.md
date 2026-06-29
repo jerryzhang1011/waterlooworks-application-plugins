@@ -8,11 +8,11 @@ You don't need to know how to code. You point your AI coding assistant (Claude C
 
 ---
 
-## 🚀 Get started (no coding required)
+## Get started
 
-**Pick the AI assistant you use — each has its own short, step-by-step guide:**
+### Step 1: Pick the AI assistant you use:
 
-### 🟣 I use Claude Code → **[Install on Claude Code](docs/install-claude-code.md)**
+#### 🟣 I use Claude Code → **[Install on Claude Code](docs/install-claude-code.md)**
 
 Quick version — type these two commands in Claude Code:
 ```text
@@ -20,7 +20,7 @@ Quick version — type these two commands in Claude Code:
 /plugin install waterlooworks-jobs@uwaterloo-jobs
 ```
 
-### 🟢 I use Codex → **[Install on Codex](docs/install-codex.md)**
+#### 🟢 I use Codex → **[Install on Codex](docs/install-codex.md)**
 
 Quick version — add the marketplace, then install from the plugin browser:
 ```text
@@ -28,9 +28,7 @@ codex plugin marketplace add jerryzhang1011/waterlooworks-application-plugins
 ```
 then run `/plugins`, open **WaterlooWorks Jobs**, and click **Install**.
 
-> Don't have an assistant yet? Get **[Claude Code](https://claude.com/claude-code)** or **[Codex](https://developers.openai.com/codex)** first. Both guides assume you're brand new and not a programmer.
-
-### Then: finish setup (works the same on both)
+### Step 2: Then: finish setup (works the same on both codex and claude)
 
 Once the plugin is installed, paste this to your assistant:
 
@@ -60,7 +58,7 @@ That's it. After setup, you can just ask in plain English:
 
 ## 📦 What's in this repo
 
-Two plugins — really the **same six skills packaged for two different AI assistants** — so it doesn't matter which one you use:
+Two plugins
 
 | Plugin | For | Manifest |
 | --- | --- | --- |
@@ -77,25 +75,6 @@ Two plugins — really the **same six skills packaged for two different AI assis
 | `ww-write-cover-letter` | Writes a tailored one-page cover-letter PDF from a posting and your résumé. |
 | `ww-upload-cover-letter` | Uploads a cover-letter PDF into the right slot during application. |
 | `ww-apply-to-job` | Applies to a Full-Cycle Service job by its ID, end to end. |
-
----
-
-## ✅ What you'll need
-
-The `ww-setup` skill checks all of this for you and installs what it safely can:
-
-- **Google Chrome**, signed in to WaterlooWorks, with a browser-control connection for your assistant.
-- **Python 3** and **Node.js** (for the helper scripts), plus `poppler` (for PDFs).
-
----
-
-## 🔧 Set up your own details
-
-These live in *your* folder and are git-ignored, so they never get committed:
-
-- **`coverletter-config.json`** — your name, address, and contact links for cover-letter headers. Copy [`coverletter-config.example.json`](coverletter-config.example.json) and replace the placeholders with your details. (Your assistant can do this for you in step 4 above.)
-- **A résumé PDF** in `resume/` — see [`resume/example-resume.pdf`](resume/example-resume.pdf) for the kind of file to point the skills at.
-- **Cover letters** are written to `coverletter/` — see [`coverletter/example-coverletter.pdf`](coverletter/example-coverletter.pdf) for an example of what the plugin produces.
 
 ---
 
