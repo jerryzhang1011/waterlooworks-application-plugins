@@ -29,7 +29,7 @@ A maintainer will review it. Small, focused PRs are easiest to merge.
 
 This repo must never contain anyone's real personal data. When you contribute:
 
-- Use the placeholder student **"Jordan Goose"** and the values in `examples/` for any example — never real names, addresses, phone numbers, emails, or résumé content.
+- Use the placeholder student **"Jordan Goose"** and the values in the shipped examples (`coverletter-config.example.json`, `resume/example-resume.pdf`, `coverletter/example-coverletter.pdf`) for any example — never real names, addresses, phone numbers, emails, or résumé content.
 - Personal files (`coverletter-config.json`, your résumé PDFs, scraped jobs) are already in `.gitignore`. Keep it that way; don't commit them.
 
 ## Code of conduct

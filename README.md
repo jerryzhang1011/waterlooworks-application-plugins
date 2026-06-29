@@ -36,7 +36,8 @@ steps for me and explain each step in plain language.
    skills need (it will ask before anything big).
 
 4. Help me create my own coverletter-config.json and add my résumé PDF, using
-   the files in the repo's examples/ folder as a template. Use MY real details
+   the example files in the repo's resume/ and coverletter/ folders as a
+   template. Use MY real details
    — and remind me they stay on my computer and are never uploaded.
 
 5. When everything is ready, tell me how to scrape jobs, write a cover letter,
@@ -86,8 +87,9 @@ The `ww-setup` skill checks all of this for you and installs what it safely can:
 
 These live in *your* folder and are git-ignored, so they never get committed:
 
-- **`coverletter-config.json`** — your name, address, and contact links for cover-letter headers. Copy [`examples/coverletter-config.example.json`](examples/coverletter-config.example.json) and replace the placeholders with your details. (Your assistant can do this for you in step 4 above.)
-- **A résumé PDF** — see [`examples/resume/example-resume.pdf`](examples/resume/example-resume.pdf) for the kind of file to point the skills at.
+- **`coverletter-config.json`** — your name, address, and contact links for cover-letter headers. Copy [`coverletter-config.example.json`](coverletter-config.example.json) and replace the placeholders with your details. (Your assistant can do this for you in step 4 above.)
+- **A résumé PDF** in `resume/` — see [`resume/example-resume.pdf`](resume/example-resume.pdf) for the kind of file to point the skills at.
+- **Cover letters** are written to `coverletter/` — see [`coverletter/example-coverletter.pdf`](coverletter/example-coverletter.pdf) for an example of what the plugin produces.
 
 ---
 

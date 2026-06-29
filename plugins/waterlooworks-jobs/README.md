@@ -35,8 +35,8 @@ Then reload so the skills register.
 
 These live in *your* working directory (git-ignored), not in the plugin:
 
-- `coverletter-config.json` — your name, address, and contact links for cover-letter headers. Copy [`examples/coverletter-config.example.json`](../../examples/coverletter-config.example.json) and edit. `ww-write-cover-letter` will also create it from your answers if it's missing.
-- A résumé PDF (e.g. `resume/ai.pdf`) to tailor cover letters from — see [`examples/resume/example-resume.pdf`](../../examples/resume/example-resume.pdf).
+- `coverletter-config.json` — your name, address, and contact links for cover-letter headers. Copy [`coverletter-config.example.json`](../../coverletter-config.example.json) and edit. `ww-write-cover-letter` will also create it from your answers if it's missing.
+- A résumé PDF in `resume/` (e.g. `resume/ai.pdf`) to tailor cover letters from — see [`resume/example-resume.pdf`](../../resume/example-resume.pdf). Generated cover letters land in `coverletter/` — see [`coverletter/example-coverletter.pdf`](../../coverletter/example-coverletter.pdf).
 
 ## Usage
 

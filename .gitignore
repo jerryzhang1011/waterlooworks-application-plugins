@@ -12,11 +12,12 @@ __pycache__/
 # ---------------------------------------------------------------------------
 # Your real cover-letter header (only the example .json belongs in git)
 coverletter-config.json
-# Generated cover letters
-*-coverletter.pdf
-coverletter/
-# Your résumé PDFs (only files under examples/ belong in git)
-/resume/
+# resume/ and coverletter/ hold YOUR private files during normal use.
+# Ignore everything inside them EXCEPT the example files shipped with this repo.
+/resume/*
+!/resume/example-resume.pdf
+/coverletter/*
+!/coverletter/example-coverletter.pdf
 # Scraped job descriptions
 /jds/
 .tmp-jd-*.md
