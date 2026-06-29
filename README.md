@@ -53,6 +53,7 @@ That's it. After setup, you can just ask in plain English:
 - *"Scrape WaterlooWorks jobs for my program."*
 - *"Write a cover letter for job 475135 using my résumé."*
 - *"Apply to WaterlooWorks job 475135 with my résumé."*
+- *"1. Run /ww-scrape-jobs. 2. Spawn sub agents, find all jobs that is fit to me, based on my resume. 3. Apply all jobs from step 2 using /ww-apply-to-job"*
 
 ---
 
