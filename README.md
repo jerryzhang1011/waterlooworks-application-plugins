@@ -2,7 +2,7 @@
 
 **AI plugins that apply to WaterlooWorks jobs for you — built for every University of Waterloo student, in any program, in any work term.**
 
-You don't need to know how to code. You point your AI coding assistant (Claude Code or Codex) at this repo, and it does the technical setup for you. Then you just say things like *"scrape jobs for my program"* or *"apply to job 475135 with my résumé,"* and the assistant drives your own WaterlooWorks session to do it.
+You don't need to know how to code. You point your AI coding assistant (Claude Code or Codex) at this repo, and it does the technical setup for you. Then you just say things like *"scrape jobs for my program"* or *"apply to job 475135 with my résumé,"* and the assistant drives your own logged-in **Google Chrome** session on WaterlooWorks to do it. (Chrome is required — both assistants control WaterlooWorks through Chrome.)
 
 > 🔒 **Your data stays with you.** These plugins run on *your* computer and drive *your* logged-in browser. Your résumé, cover-letter details, and WaterlooWorks login never get uploaded anywhere by this project. Every example in this repo uses a made-up student ("Jordan Goose") — none of it is real.
 
