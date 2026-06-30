@@ -48,11 +48,11 @@ CLI_TOOLS = {
 
 # Signal in markdown that a skill depends on a browser connector we cannot install
 # from the CLI: a name, a regex to match in the docs, and a setup hint for the user.
-MCP_NAME = "Claude in Chrome (MCP browser automation)"
-MCP_RE = re.compile(r"claude\s+in\s+chrome|mcp__claude_in_chrome|logged-in chrome session", re.I)
+MCP_NAME = "Codex @chrome plugin (browser automation)"
+MCP_RE = re.compile(r"claude\s+in\s+chrome|mcp__claude_in_chrome|logged-in chrome session|@chrome|plugin://chrome", re.I)
 MCP_HINT = (
-    "Connect the Claude in Chrome MCP server (install the Chrome extension and "
-    "enable the connector), then make sure Chrome is open and logged in."
+    "Enable Codex's bundled @chrome plugin (plugin://chrome@openai-bundled) in your "
+    "client, then make sure Chrome is open and logged in to WaterlooWorks."
 )
 
 
@@ -346,7 +346,7 @@ def print_human(report: dict):
     if not report["cli_tools"]:
         print("  (none)")
 
-    print("\nMCP / external (cannot install from CLI — ask the user):")
+    print("\nBrowser / external (cannot install from CLI — ask the user):")
     for d in report["mcp"]:
         print(f"  [USER] {d['name']}  <- {', '.join(d['required_by'])}")
         print(f"            {d['note']}")
@@ -363,7 +363,7 @@ def print_human(report: dict):
 
 def main():
     ap = argparse.ArgumentParser(description="Detect and check tool dependencies used by skills.")
-    ap.add_argument("--root", default=".claude/skills", help="skills root to scan (default: .claude/skills)")
+    ap.add_argument("--root", default=".codex/skills", help="skills root to scan (default: .codex/skills)")
     ap.add_argument("--json", action="store_true", help="emit machine-readable JSON instead of a table")
     args = ap.parse_args()
 

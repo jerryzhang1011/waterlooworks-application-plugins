@@ -8,7 +8,7 @@
       "name": "waterlooworks-jobs",
       "source": {
         "source": "local",
-        "path": "./plugins/waterlooworks-jobs"
+        "path": "./plugins/waterlooworks-jobs-codex"
       },
       "policy": {
         "installation": "AVAILABLE",

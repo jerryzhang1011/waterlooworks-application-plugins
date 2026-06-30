@@ -1,0 +1,14 @@
+{
+  "_comment": "EXAMPLE ONLY — every value below is a placeholder. Copy this file to 'coverletter-config.json' in the folder where you generate cover letters, then replace every field with YOUR OWN details. Your real details stay on your computer and are never uploaded by this plugin. Fields: 'name' (required) is shown centered + bold at the top and reused as the signature. 'address_lines' fill the LEFT of the contact row (use [] to omit). 'contact_lines' fill the RIGHT, top to bottom in the order listed; each shows 'text', hyperlinked when a 'url' is given — put phone / email / LinkedIn / GitHub / website here in whatever order you like.",
+  "name": "Jordan Goose",
+  "address_lines": [
+    "200 University Ave W",
+    "Waterloo, ON, Canada, N2L 3G1"
+  ],
+  "contact_lines": [
+    { "text": "LinkedIn", "url": "https://www.linkedin.com/in/your-handle" },
+    { "text": "GitHub", "url": "https://github.com/your-handle" },
+    { "text": "jordan.goose@uwaterloo.ca", "url": "mailto:jordan.goose@uwaterloo.ca" },
+    { "text": "(226) 555-0123" }
+  ]
+}

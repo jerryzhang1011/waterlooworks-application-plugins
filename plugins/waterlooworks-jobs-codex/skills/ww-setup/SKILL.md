@@ -1,13 +1,13 @@
 ---
 name: ww-setup
-description: Initialize this project by making sure every external tool the skills in `.claude/skills` need is actually installed. Use this whenever the user wants to set up, bootstrap, init, or onboard the project, or asks "are the tools/dependencies installed?", "will the skills run on this machine?", "set this repo up", or after cloning/pulling on a fresh machine. Scans the skills for their real dependencies (language runtimes, third-party Python/npm packages, command-line tools the skills shell out to like poppler, and MCP servers), checks each, auto-installs the safe ones, asks before heavy/system installs, and hands off anything that only the user can connect (like an MCP server).
+description: Initialize this project by making sure every external tool the skills in `.codex/skills` need is actually installed. Use this whenever the user wants to set up, bootstrap, init, or onboard the project, or asks "are the tools/dependencies installed?", "will the skills run on this machine?", "set this repo up", or after cloning/pulling on a fresh machine. Scans the skills for their real dependencies (language runtimes, third-party Python/npm packages, command-line tools the skills shell out to like poppler, and browser connectors), checks each, auto-installs the safe ones, asks before heavy/system installs, and hands off anything that only the user can connect (like the browser plugin).
 ---
 
 # ww-setup
 
 Make a freshly-cloned copy of this repo able to actually *run* its skills. The skills
 call out to external tools — `python3` + `reportlab` to render cover letters, `node`
-to write/validate scraped JDs, the Claude-in-Chrome MCP server to drive WaterlooWorks.
+to write/validate scraped JDs, the Codex `@chrome` plugin to drive WaterlooWorks.
 If any of those is missing, the skill fails partway through with a confusing error.
 This skill finds the gaps up front and closes the ones it safely can.
 
@@ -25,7 +25,7 @@ programmatically; run it without `--json` first if you want to show the user a r
 table.
 
 ```bash
-python3 .claude/skills/ww-setup/scripts/check_skill_deps.py --root .claude/skills --json
+python3 .codex/skills/ww-setup/scripts/check_skill_deps.py --root .codex/skills --json
 ```
 
 Each missing dependency comes back with a `class` field that tells you exactly how to
@@ -35,9 +35,9 @@ handle it:
 |----------|-----------|------------|
 | `light`  | A user-level Python package (e.g. `reportlab`) | **Auto-install, no need to ask.** |
 | `heavy`  | A language runtime or global npm package — needs Homebrew/sudo/system change | **Confirm with the user, then run.** |
-| `user`   | An MCP server / external connection (e.g. Claude in Chrome) | **You can't install it from the CLI — hand it to the user with the setup hint.** |
+| `user`   | A browser connector / external plugin (e.g. Codex's `@chrome` plugin) | **You can't install it from the CLI — hand it to the user with the setup hint.** |
 
-The script exits `0` when all CLI-installable deps are satisfied (MCP/user deps don't
+The script exits `0` when all CLI-installable deps are satisfied (browser/user deps don't
 fail the check), `1` when something needs action. Installed items report `class: null`
 and `installed: true` — skip those.
 
@@ -72,13 +72,13 @@ it's installed.
 
 ## Step 4 — Hand off what only the user can do (`user`)
 
-MCP servers (like Claude in Chrome) can't be installed from a shell — they're a
-connector + browser extension the user wires up in their client. For each `mcp` entry,
-tell the user which skills need it and pass along the `note` (setup hint) from the report.
-Then offer to re-run the check once they've connected it. Don't claim the project is fully
-initialized while a required MCP server is still unconnected — say it's "ready except for
-the browser connection," so the user isn't surprised later when a WaterlooWorks skill
-can't find the browser.
+Browser connectors (like Codex's `@chrome` plugin) can't be installed from a shell —
+they're enabled in your client. For each `mcp` entry, tell the user which skills need it
+and pass along the `note` (setup hint) from the report. Then offer to re-run the check
+once they've enabled it. Don't claim the project is fully initialized while the required
+browser connector is still unconnected — say it's "ready except for the browser
+connection," so the user isn't surprised later when a WaterlooWorks skill can't find the
+browser.
 
 ## Step 5 — Verify and report
 
@@ -88,21 +88,21 @@ Then give the user a short, honest summary grouped by outcome — for example:
 > Project initialized:
 > - ✅ Installed: reportlab
 > - ✅ Already present: python3 (3.13), node (v22)
-> - ⏳ Needs you: Claude in Chrome MCP — connect it, then I can re-check.
+> - ⏳ Needs you: Codex `@chrome` plugin — enable it, then I can re-check.
 
 This skill is **idempotent** — safe to run any time. On an already-set-up machine it just
 confirms everything's present and points out anything that drifted.
 
 ## Notes
 
-- **Scope is `.claude/skills` by default**, matching how this repo is set up. If the user
-  asks to also cover `.codex/skills` (it mirrors `.claude`), pass `--root .codex/skills`
+- **Scope is `.codex/skills` by default**, matching how this repo is set up. If the user
+  asks to also cover `.claude/skills` (it mirrors `.codex`), pass `--root .claude/skills`
   and merge the results — the dependency set is nearly identical.
 - **The script only detects and reports; it never installs.** Keeping installation here in
   the skill is deliberate: the auto-light / confirm-heavy / hand-off-user policy lives in
   one place, and the user stays in control of anything with system-level consequences.
 - **New dependencies are picked up automatically.** Detection is driven by what the skills
-  actually import/require and the MCP signals in their docs, so when a skill gains a new
-  tool, this check will flag it without anyone updating a hardcoded list. The checker
-  assumes a package's pip name matches its import name; if they differ (e.g. `yaml` →
-  `pyyaml`), install with the correct pip name.
+  actually import/require and the browser-connector signals in their docs, so when a skill
+  gains a new tool, this check will flag it without anyone updating a hardcoded list. The
+  checker assumes a package's pip name matches its import name; if they differ (e.g.
+  `yaml` → `pyyaml`), install with the correct pip name.

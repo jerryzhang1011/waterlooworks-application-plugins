@@ -60,7 +60,7 @@ Two plugins
 | Plugin | For | Manifest |
 | --- | --- | --- |
 | **Claude Code plugin** | Claude Code | [`plugins/waterlooworks-jobs/.claude-plugin/plugin.json`](plugins/waterlooworks-jobs/.claude-plugin/plugin.json) |
-| **Codex plugin** | Codex | [`plugins/waterlooworks-jobs/.codex-plugin/plugin.json`](plugins/waterlooworks-jobs/.codex-plugin/plugin.json) |
+| **Codex plugin** | Codex | [`plugins/waterlooworks-jobs-codex/.codex-plugin/plugin.json`](plugins/waterlooworks-jobs-codex/.codex-plugin/plugin.json) |
 
 ### The six skills
 

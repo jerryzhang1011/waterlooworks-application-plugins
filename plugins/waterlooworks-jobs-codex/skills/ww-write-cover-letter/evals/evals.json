@@ -1,0 +1,59 @@
+{
+  "skill_name": "ww-write-cover-letter",
+  "evals": [
+    {
+      "id": 0,
+      "name": "by-id-named-resume",
+      "prompt": "Make a one-page cover letter for WaterlooWorks job 475135 using ai.pdf.",
+      "expected_output": "coverletter/Jaza-Energy-coverletter.pdf: one page, Times style, name 'Jordan Goose' centered, address-left/LinkedIn+email-right header, tailored to the Jaza Energy AI Engineering Co-op (Fall 2026) using real ai.pdf experience.",
+      "files": [],
+      "assertions": [
+        {"name": "pdf_named_for_company", "text": "An output PDF exists in coverletter/ whose filename is derived from the company (e.g. coverletter/Jaza-Energy-coverletter.pdf)."},
+        {"name": "exactly_one_page", "text": "The PDF is exactly one page."},
+        {"name": "header_has_candidate_name", "text": "The header shows the candidate name 'Jordan Goose', centered at the top."},
+        {"name": "header_has_linkedin_and_email", "text": "The header contains the LinkedIn link and the email jordan.goose@uwaterloo.ca from the config."},
+        {"name": "names_correct_company", "text": "The letter body names the correct company (Jaza Energy)."},
+        {"name": "names_role_and_term", "text": "The letter references the correct role (AI Engineering Co-op) and work term (Fall 2026)."},
+        {"name": "uses_real_resume_evidence", "text": "The body cites concrete experience that actually appears in ai.pdf (e.g. Dtwo.ai / MCP / LLM work) and fabricates no employers, dates, or metrics."},
+        {"name": "times_font_style", "text": "The PDF uses Times (Times-Roman/Times-Bold), matching the reference sample style."},
+        {"name": "body_word_count_reasonable", "text": "Body is roughly 230-360 words (tailored, not padded, fits one page)."}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "infer-resume",
+      "prompt": "Write a cover letter for job 475290, the Klue GenAI software engineering co-op.",
+      "expected_output": "coverletter/Klue-coverletter.pdf: one page, correct style/header, tailored to the Klue Software Engineering Co-op (GenAI). With no resume named, the skill should consult ranks/shortlist.md and pick ai.pdf.",
+      "files": [],
+      "assertions": [
+        {"name": "pdf_named_for_company", "text": "An output PDF exists in coverletter/ whose filename is derived from the company (e.g. coverletter/Klue-coverletter.pdf)."},
+        {"name": "exactly_one_page", "text": "The PDF is exactly one page."},
+        {"name": "inferred_correct_resume", "text": "With no resume specified, the run selected ai.pdf (the resume ranks/shortlist.md recommends for 475290)."},
+        {"name": "header_has_candidate_name", "text": "The header shows 'Jordan Goose' centered at the top."},
+        {"name": "header_has_linkedin_and_email", "text": "The header contains the LinkedIn link and the email from the config."},
+        {"name": "names_correct_company", "text": "The letter body names the correct company (Klue)."},
+        {"name": "names_role_and_term", "text": "The letter references the GenAI software engineering role and the Fall 2026 term."},
+        {"name": "uses_real_resume_evidence", "text": "The body cites concrete experience from ai.pdf and fabricates nothing."},
+        {"name": "times_font_style", "text": "The PDF uses Times, matching the reference sample style."}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "backend",
+      "prompt": "Draft a cover letter for job 475547, the Recurrent Energy junior software developer co-op, using backend.pdf.",
+      "expected_output": "coverletter/Recurrent-Energy-coverletter.pdf: one page, correct style/header, tailored to the Recurrent Energy Junior Software Developer Co-op using backend.pdf evidence.",
+      "files": [],
+      "assertions": [
+        {"name": "pdf_named_for_company", "text": "An output PDF exists in coverletter/ whose filename is derived from the company (e.g. coverletter/Recurrent-Energy-coverletter.pdf)."},
+        {"name": "exactly_one_page", "text": "The PDF is exactly one page."},
+        {"name": "header_has_candidate_name", "text": "The header shows 'Jordan Goose' centered at the top."},
+        {"name": "header_has_linkedin_and_email", "text": "The header contains the LinkedIn link and the email from the config."},
+        {"name": "names_correct_company", "text": "The letter body names the correct company (Recurrent Energy)."},
+        {"name": "names_role_and_term", "text": "The letter references the junior software developer role and the Fall 2026 term."},
+        {"name": "uses_real_resume_evidence", "text": "The body cites concrete experience that appears in backend.pdf and fabricates nothing."},
+        {"name": "times_font_style", "text": "The PDF uses Times, matching the reference sample style."},
+        {"name": "body_word_count_reasonable", "text": "Body is roughly 230-360 words."}
+      ]
+    }
+  ]
+}
