@@ -70,15 +70,25 @@ silently. Show the user the exact `install_cmd` the script proposes and what it'
 If the user declines, leave it and note in your summary that those skills won't run until
 it's installed.
 
-## Step 4 — Hand off what only the user can do (`user`)
+## Step 4 — Verify the browser connector (`user`)
 
-Browser connectors (like Codex's `@chrome` plugin) can't be installed from a shell —
-they're enabled in your client. For each `mcp` entry, tell the user which skills need it
-and pass along the `note` (setup hint) from the report. Then offer to re-run the check
-once they've enabled it. Don't claim the project is fully initialized while the required
-browser connector is still unconnected — say it's "ready except for the browser
-connection," so the user isn't surprised later when a WaterlooWorks skill can't find the
-browser.
+The checker reports the browser connector (`class: "user"`, `installed: null`) but can't
+see whether it's actually live — a Chrome plugin isn't visible from a shell. **You can
+see it, though: check your own available capabilities.** If the Codex Chrome plugin is
+present in this session — an available skill/capability named `chrome:control-chrome` or
+`Chrome:control-chrome`, or equivalent Chrome-plugin browser-control tools exposed by
+Codex — then `@chrome` is enabled.
+
+- **Chrome capability present** → connected. Report it as satisfied; don't tell the user
+  to set it up.
+- **Chrome capability absent** → not connected. Tell the user which skills need it, pass
+  along the `note` (setup hint) from the report, and offer to re-check. Don't claim the
+  project is fully initialized while it's still unconnected — say it's "ready except for
+  the browser connection," so the user isn't surprised later when a WaterlooWorks skill
+  can't find the browser.
+
+Your capability check, not the checker's `installed: null`, is the source of truth for
+this dependency.
 
 ## Step 5 — Verify and report
 
@@ -88,7 +98,10 @@ Then give the user a short, honest summary grouped by outcome — for example:
 > Project initialized:
 > - ✅ Installed: reportlab
 > - ✅ Already present: python3 (3.13), node (v22)
-> - ⏳ Needs you: Codex `@chrome` plugin — enable it, then I can re-check.
+> - ✅ Connected: Codex `@chrome` plugin (Chrome browser-control capability available)
+
+(If the Chrome capability was absent instead, that last line becomes
+`⏳ Needs you: Codex @chrome plugin — enable it, then I can re-check.`)
 
 This skill is **idempotent** — safe to run any time. On an already-set-up machine it just
 confirms everything's present and points out anything that drifted.

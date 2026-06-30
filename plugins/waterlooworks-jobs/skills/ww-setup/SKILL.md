@@ -70,15 +70,23 @@ silently. Show the user the exact `install_cmd` the script proposes and what it'
 If the user declines, leave it and note in your summary that those skills won't run until
 it's installed.
 
-## Step 4 — Hand off what only the user can do (`user`)
+## Step 4 — Verify the browser connector (`user`)
 
-MCP servers (like Claude in Chrome) can't be installed from a shell — they're a
-connector + browser extension the user wires up in their client. For each `mcp` entry,
-tell the user which skills need it and pass along the `note` (setup hint) from the report.
-Then offer to re-run the check once they've connected it. Don't claim the project is fully
-initialized while a required MCP server is still unconnected — say it's "ready except for
-the browser connection," so the user isn't surprised later when a WaterlooWorks skill
-can't find the browser.
+The checker reports the browser connector (`class: "user"`, `installed: null`) but can't
+see whether it's actually live — a Chrome connector isn't visible from a shell. **You can
+see it, though: check your own available tools.** If the Claude in Chrome browser-control
+tools are present in this session — tool names beginning `mcp__Claude_in_Chrome__` (e.g.
+`mcp__Claude_in_Chrome__navigate`) — then Claude in Chrome is connected.
+
+- **Tools present** → connected. Report it as satisfied; don't tell the user to set it up.
+- **Tools absent** → not connected. Tell the user which skills need it, pass along the
+  `note` (setup hint) from the report, and offer to re-check. Don't claim the project is
+  fully initialized while it's still unconnected — say it's "ready except for the browser
+  connection," so the user isn't surprised later when a WaterlooWorks skill can't find the
+  browser.
+
+Your tool-availability check, not the checker's `installed: null`, is the source of truth
+for this dependency.
 
 ## Step 5 — Verify and report
 
@@ -88,7 +96,10 @@ Then give the user a short, honest summary grouped by outcome — for example:
 > Project initialized:
 > - ✅ Installed: reportlab
 > - ✅ Already present: python3 (3.13), node (v22)
-> - ⏳ Needs you: Claude in Chrome MCP — connect it, then I can re-check.
+> - ✅ Connected: Claude in Chrome (browser-control tools available)
+
+(If the browser tools were absent instead, that last line becomes
+`⏳ Needs you: Claude in Chrome — connect it, then I can re-check.`)
 
 This skill is **idempotent** — safe to run any time. On an already-set-up machine it just
 confirms everything's present and points out anything that drifted.
