@@ -75,6 +75,25 @@ Two plugins
 
 ---
 
+## Update or remove
+
+WaterlooWorks changes often, so refresh the plugin now and then. (More detail in the [Claude Code](docs/install-claude-code.md) and [Codex](docs/install-codex.md) guides.)
+
+**🟣 Claude Code** — update:
+```text
+/plugin marketplace update uwaterloo-jobs
+/plugin install waterlooworks-jobs@uwaterloo-jobs
+```
+Then `/reload-plugins` (or restart Claude Code). Uninstall with `/plugin uninstall waterlooworks-jobs@uwaterloo-jobs`.
+
+**🟢 Codex** — update:
+```text
+codex plugin marketplace update jerryzhang1011/waterlooworks-application-plugins
+```
+Then reinstall from `/plugins` if prompted. To uninstall, open `/plugins`, select **WaterlooWorks Jobs**, and choose **Uninstall** (or disable it to keep it but turn it off).
+
+---
+
 ## 🤝 Contributing — UW students welcome!
 
 This is a community project **by and for University of Waterloo students**, and we'd love your help — whatever your program or experience level.
