@@ -26,19 +26,6 @@ import sys
 
 # --- knowledge the detector needs -------------------------------------------------
 
-# Python import name -> pip install name, when they differ. Default is identity.
-PIP_NAME_MAP = {
-    "reportlab": "reportlab",
-    "yaml": "pyyaml",
-    "PIL": "pillow",
-    "cv2": "opencv-python",
-    "bs4": "beautifulsoup4",
-    "dotenv": "python-dotenv",
-    "sklearn": "scikit-learn",
-    "docx": "python-docx",
-    "pptx": "python-pptx",
-}
-
 # Node core modules (a require() of one of these needs no install). Not exhaustive,
 # but covers everything the skills here use plus the common ones.
 NODE_BUILTINS = {
@@ -46,20 +33,6 @@ NODE_BUILTINS = {
     "dns", "events", "fs", "http", "http2", "https", "net", "os", "path",
     "process", "punycode", "querystring", "readline", "stream", "string_decoder",
     "timers", "tls", "tty", "url", "util", "v8", "vm", "zlib",
-}
-
-# Fallback Python stdlib set for interpreters older than 3.10 (no sys.stdlib_module_names).
-_STDLIB_FALLBACK = {
-    "__future__", "abc", "argparse", "ast", "asyncio", "base64", "binascii",
-    "bisect", "calendar", "collections", "contextlib", "copy", "csv", "ctypes",
-    "datetime", "decimal", "difflib", "dis", "enum", "errno", "functools", "gc",
-    "getpass", "glob", "gzip", "hashlib", "heapq", "hmac", "html", "http", "imp",
-    "importlib", "inspect", "io", "itertools", "json", "logging", "math", "mimetypes",
-    "multiprocessing", "operator", "os", "pathlib", "pickle", "platform", "pprint",
-    "queue", "random", "re", "secrets", "shutil", "signal", "socket", "sqlite3",
-    "ssl", "stat", "string", "struct", "subprocess", "sys", "tempfile", "textwrap",
-    "threading", "time", "traceback", "types", "typing", "unicodedata", "unittest",
-    "urllib", "uuid", "warnings", "weakref", "xml", "zipfile", "zlib",
 }
 
 # External command-line tools a skill may shell out to (in docs or via subprocess).
@@ -71,35 +44,20 @@ _STDLIB_FALLBACK = {
 CLI_TOOLS = {
     "pdftotext": ("poppler", "brew install poppler"),
     "pdfinfo": ("poppler", "brew install poppler"),
-    "pdftoppm": ("poppler", "brew install poppler"),
-    "jq": ("jq", "brew install jq"),
-    "pandoc": ("pandoc", "brew install pandoc"),
-    "ffmpeg": ("ffmpeg", "brew install ffmpeg"),
-    "wkhtmltopdf": ("wkhtmltopdf", "brew install --cask wkhtmltopdf"),
-    "qpdf": ("qpdf", "brew install qpdf"),
-    "tesseract": ("tesseract", "brew install tesseract"),
-    "ghostscript": ("ghostscript", "brew install ghostscript"),
-    "rsvg-convert": ("librsvg", "brew install librsvg"),
-    "yt-dlp": ("yt-dlp", "brew install yt-dlp"),
 }
 
-# Signals in markdown that a skill depends on a browser connector / external plugin
-# we cannot install from the CLI. name -> (compiled regex, setup hint).
-MCP_SIGNALS = [
-    (
-        "Codex @chrome plugin (browser automation)",
-        re.compile(r"claude\s+in\s+chrome|mcp__claude_in_chrome|logged-in chrome session|@chrome|plugin://chrome", re.I),
-        "Enable Codex's bundled @chrome plugin (plugin://chrome@openai-bundled) in your "
-        "client, then make sure Chrome is open and logged in to WaterlooWorks.",
-    ),
-]
+# Signal in markdown that a skill depends on a browser connector we cannot install
+# from the CLI: a name, a regex to match in the docs, and a setup hint for the user.
+MCP_NAME = "Codex @chrome plugin (browser automation)"
+MCP_RE = re.compile(r"claude\s+in\s+chrome|mcp__claude_in_chrome|logged-in chrome session|@chrome|plugin://chrome", re.I)
+MCP_HINT = (
+    "Enable Codex's bundled @chrome plugin (plugin://chrome@openai-bundled) in your "
+    "client, then make sure Chrome is open and logged in to WaterlooWorks."
+)
 
 
 def stdlib_names() -> set[str]:
-    names = getattr(sys, "stdlib_module_names", None)
-    if names:
-        return set(names) | {"__future__"}
-    return set(_STDLIB_FALLBACK)
+    return set(sys.stdlib_module_names) | {"__future__"}
 
 
 # Directories that hold scaffolding/examples/build output rather than a skill's real
@@ -214,12 +172,8 @@ def detect(root: str):
 
     mcp: dict[str, tuple[set[str], str]] = {}
     for path in md_files:
-        skill = skill_name_for(path, root)
-        src = read(path)
-        for name, rx, hint in MCP_SIGNALS:
-            if rx.search(src):
-                bucket = mcp.setdefault(name, (set(), hint))
-                bucket[0].add(skill)
+        if MCP_RE.search(read(path)):
+            mcp.setdefault(MCP_NAME, (set(), MCP_HINT))[0].add(skill_name_for(path, root))
 
     # CLI tools: scan all text the skill ships (docs + scripts) for distinctive tool names.
     cli: dict[str, set[str]] = {}   # binary -> {skills}
@@ -296,7 +250,7 @@ def build_report(root: str):
     py_ok = shutil.which("python3") or shutil.which("python")
     for imp in sorted(pip_pkgs):
         present = py_module_present(imp) if py_ok else False
-        install = PIP_NAME_MAP.get(imp, imp)
+        install = imp
         report["pip_packages"].append({
             "import": imp,
             "install": install,

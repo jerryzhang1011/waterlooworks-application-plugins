@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -58,19 +57,8 @@ def load_entries(path: Path) -> list[dict[str, object]]:
     return entries
 
 
-def write_entries(path: Path, entries: list[dict[str, object]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path = path.with_name(f"{path.name}.tmp")
-    with tmp_path.open("w", encoding="utf-8") as handle:
-        for entry in entries:
-            handle.write(json.dumps(entry, ensure_ascii=False, sort_keys=True))
-            handle.write("\n")
-    tmp_path.replace(path)
-
-
 def cmd_add(args: argparse.Namespace) -> int:
     path = resolve_log_path(args)
-    entries = load_entries(path)
     now = utc_now()
     entry = {
         "id": str(uuid.uuid4()),
@@ -82,38 +70,11 @@ def cmd_add(args: argparse.Namespace) -> int:
         "answer": args.answer,
         "context": parse_context(args.context),
     }
-    entries.append(entry)
-    write_entries(path, entries)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(entry, ensure_ascii=False, sort_keys=True) + "\n")
     print(json.dumps({"status": "added", "path": str(path), "entry": entry}, ensure_ascii=False))
     return 0
-
-
-def cmd_update(args: argparse.Namespace) -> int:
-    path = resolve_log_path(args)
-    entries = load_entries(path)
-    for entry in entries:
-        if entry.get("id") != args.id:
-            continue
-        if args.question is not None:
-            entry["question"] = args.question
-        if args.answer is not None:
-            entry["answer"] = args.answer
-        if args.job_id is not None:
-            entry["job_id"] = args.job_id
-        if args.skill is not None:
-            entry["skill"] = args.skill
-        if args.context:
-            existing = entry.get("context")
-            if not isinstance(existing, dict):
-                existing = {}
-            existing.update(parse_context(args.context))
-            entry["context"] = existing
-        entry["updated_at"] = utc_now()
-        write_entries(path, entries)
-        print(json.dumps({"status": "updated", "path": str(path), "entry": entry}, ensure_ascii=False))
-        return 0
-    print(f"No entry found with id {args.id}", file=sys.stderr)
-    return 1
 
 
 def cmd_list(args: argparse.Namespace) -> int:
@@ -153,15 +114,6 @@ def build_parser() -> argparse.ArgumentParser:
     add.add_argument("--skill", default=DEFAULT_SKILL, help=f"Skill name. Default: {DEFAULT_SKILL}")
     add.add_argument("--context", action="append", default=[], help="Additional metadata as key=value. May be repeated.")
     add.set_defaults(func=cmd_add)
-
-    update = subparsers.add_parser("update", help="Update an existing entry by id.")
-    update.add_argument("--id", required=True, help="Entry id to update.")
-    update.add_argument("--question", help="Replacement question text.")
-    update.add_argument("--answer", help="Replacement answer text.")
-    update.add_argument("--job-id", help="Replacement job ID.")
-    update.add_argument("--skill", help="Replacement skill name.")
-    update.add_argument("--context", action="append", default=[], help="Additional metadata as key=value. May be repeated.")
-    update.set_defaults(func=cmd_update)
 
     list_cmd = subparsers.add_parser("list", help="List recorded questions and answers.")
     list_cmd.add_argument("--json", action="store_true", help="Print JSON instead of a readable list.")

@@ -103,6 +103,6 @@ confirms everything's present and points out anything that drifted.
   one place, and the user stays in control of anything with system-level consequences.
 - **New dependencies are picked up automatically.** Detection is driven by what the skills
   actually import/require and the MCP signals in their docs, so when a skill gains a new
-  tool, this check will flag it without anyone updating a hardcoded list. If a brand-new
-  package's import name differs from its pip name and isn't in the script's small mapping
-  table, add it to `PIP_NAME_MAP` in `scripts/check_skill_deps.py`.
+  tool, this check will flag it without anyone updating a hardcoded list. The checker
+  assumes a package's pip name matches its import name; if they differ (e.g. `yaml` →
+  `pyyaml`), install with the correct pip name.
