@@ -1,6 +1,6 @@
-# WaterlooWorks Jobs
+# WaterlooWorks Jobs (Codex)
 
-A plugin that automates the WaterlooWorks application workflow for **any University of Waterloo student — any program, any work term.** It drives your own logged-in Chrome session to scrape postings, write tailored cover letters, upload documents, and submit Full-Cycle Service applications. This is the **Claude Code** build (`.claude-plugin/`); the matching **Codex** build lives in [`../waterlooworks-jobs-codex`](../waterlooworks-jobs-codex).
+A plugin that automates the WaterlooWorks application workflow for **any University of Waterloo student — any program, any work term.** It drives your own logged-in Chrome session to scrape postings, write tailored cover letters, upload documents, and submit Full-Cycle Service applications. This is the **Codex** build (`.codex-plugin/`); the matching **Claude Code** build lives in [`../waterlooworks-jobs`](../waterlooworks-jobs).
 
 > This plugin automates *your* WaterlooWorks session on *your* machine. It never stores or transmits your credentials — when a real login, Duo/MFA, or CAPTCHA prompt appears, it stops and hands control back to you. All examples use a fictional student ("Jordan Goose").
 
@@ -8,7 +8,7 @@ A plugin that automates the WaterlooWorks application workflow for **any Univers
 
 | Skill | What it does |
 | --- | --- |
-| `ww-setup` | Checks and installs everything the other skills need (runtimes, Python/npm packages, `poppler`, browser-control). Run this first on a new machine. |
+| `ww-setup` | Checks and installs everything the other skills need (runtimes, Python/npm packages, `poppler`, and the Codex `@chrome` browser plugin). Run this first on a new machine. |
 | `ww-login` | Restores a dropped WaterlooWorks session automatically before viewing or applying. |
 | `ww-scrape-jobs` | Saves job descriptions as individual Markdown files under `jds/`. Defaults to your "My Program" filter but accepts any WaterlooWorks search or filter. |
 | `ww-write-cover-letter` | Generates a tailored one-page cover-letter PDF from a job description and one of your résumés. |
@@ -21,15 +21,13 @@ The easiest path is to let your AI assistant set everything up — see the [repo
 
 To install manually once the repo is cloned locally:
 
-**Claude Code**
+**Codex**
 ```
-/plugin marketplace add /path/to/waterlooworks-application-plugins
-/plugin install waterlooworks-jobs@uwaterloo-jobs
+codex plugin marketplace add /path/to/waterlooworks-application-plugins
 ```
+Then open `/plugins`, find **WaterlooWorks Jobs**, and install it (make sure it's enabled). Codex resolves this plugin through [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json).
 
-**Codex** — add the plugin referenced by `.agents/plugins/marketplace.json` in the cloned repo.
-
-Then reload so the skills register.
+Reload so the skills register.
 
 ## First-time configuration
 
@@ -40,11 +38,13 @@ These live in *your* working directory (git-ignored), not in the plugin:
 
 ## Usage
 
+Ask in plain English, or call a skill explicitly with `@`:
+
 ```
 Set up the WaterlooWorks tools on this machine.          # ww-setup
-Scrape WaterlooWorks jobs for my program.                # ww-scrape-jobs
-Write a cover letter for job 475135 using my résumé.     # ww-write-cover-letter
-Apply to WaterlooWorks job 475135 with my résumé.        # ww-apply-to-job (chains login + cover letter)
+Scrape WaterlooWorks jobs for my program.                # @ww-scrape-jobs
+Write a cover letter for job 475135 using my résumé.     # @ww-write-cover-letter
+Apply to WaterlooWorks job 475135 with my résumé.        # @ww-apply-to-job (chains login + cover letter)
 ```
 
 ## License
