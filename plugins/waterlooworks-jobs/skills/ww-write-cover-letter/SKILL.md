@@ -113,10 +113,10 @@ Keep the paragraphs blank-line separated — you'll pipe them straight into the 
 
 ## Step 4 — Generate the PDF
 
-Run the bundled script from the project root (where `coverletter-config.json` lives; the PDF lands in `coverletter/`, created if missing). The script path is relative to the project root, and the body paragraphs go in on stdin via `--body -`:
+Run the bundled script from the project root (where `coverletter-config.json` lives; the PDF lands in `coverletter/`, created if missing). The script lives in this skill's own `scripts/` directory — resolve `<skill dir>` to the absolute path shown as "Base directory for this skill:" when this skill loads. (Under a plugin install that is inside the plugin cache; a literal `.claude/skills/…` path is only correct for a local repo checkout, so do not hardcode it.) The body paragraphs go in on stdin via `--body -`:
 
 ```bash
-python3 .claude/skills/ww-write-cover-letter/scripts/generate_cover_letter.py \
+python3 "<skill dir>/scripts/generate_cover_letter.py" \
   --config coverletter-config.json \
   --company "Jaza Energy" \
   --body - <<'EOF'
