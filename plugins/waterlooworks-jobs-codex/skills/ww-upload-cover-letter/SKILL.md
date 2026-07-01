@@ -23,16 +23,11 @@ Do not upload a non-PDF file. The recorded WaterlooWorks dialog accepted `pdf` a
 
 ## Browser Setup
 
-Use a browser-control workflow that operates against the user's logged-in Chrome session because WaterlooWorks depends on that authenticated state.
-
-**Pick the upload method by environment — decide this FIRST, before you touch the dialog:**
-
-- **Codex (the `@chrome` plugin, `plugin://chrome@openai-bundled`):** the `@chrome` plugin exposes the Playwright `filechooser` API, so the **file-chooser flow below is your primary method — use it.** Do NOT reach for the DataTransfer / base64 injection method first. That section is a *last-resort fallback* for Codex and applies only after the file-chooser path has genuinely failed. Its notes say "verified working in Claude in Chrome" — that is a *different* runtime, so do not let it pull you off the `@chrome` file-chooser flow.
-- **Claude in Chrome (the in-page `javascript_tool`):** the Playwright `filechooser` API is not available, so skip the file-chooser flow and go straight to `## Inject bytes via DataTransfer` (the primary method there).
+Use the `@chrome` plugin (`plugin://chrome@openai-bundled`) so the task runs against the user's logged-in Chrome session, which WaterlooWorks depends on. Uploads go through the Playwright `filechooser` API the `@chrome` plugin exposes.
 
 - Claim or continue the existing WaterlooWorks `Submit Application` tab; do not start a new unrelated application.
 - Do not inspect cookies, local storage, saved passwords, or browser profile internals.
-- Use the browser file-chooser flow as the primary upload method. These instructions are self-contained so the skill can run in Codex, Claude Code, or similar browser-control environments:
+- Use the browser file-chooser flow as the upload method:
 
 ```js
 const chooserPromise = tab.playwright.waitForEvent("filechooser", { timeoutMs: 10000 });
@@ -52,9 +47,44 @@ await chooser.setFiles([coverletterPath]); // absolute path to coverletter/<Comp
 - If the file input is hidden, tiny, or does not emit a chooser, click the associated visible upload button or `label[for="fileUpload_docUpload"]` after arming `waitForEvent("filechooser")`. WaterlooWorks may require opening a nested `Upload Cover Letter` file panel first, then clicking the visible `Choose a file` label in that nested panel.
 - If Chrome reports that file upload needs file URL access, tell the user exactly: `To enable file upload, go to chrome://extensions in Chrome, click Details under the Codex extension, and enable "Allow access to file URLs." See [here](https://developers.openai.com/codex/app/chrome-extension#upload-files) for details.`
 
-## Inject bytes via DataTransfer (Claude in Chrome: primary method — Codex/Playwright: LAST-RESORT fallback only)
+## Workflow
 
-**Codex: this is NOT your default — skip it unless the `@chrome` file-chooser flow in `## Browser Setup` has genuinely failed** (the chooser never fired after you tried the dialog-scoped file input, the associated visible upload control, AND any nested `Choose a file` label). Do not jump here just because one upload icon timed out, and do not be swayed by the "verified working in Claude in Chrome" note below — that is a different runtime. **If you are using Claude in Chrome, the opposite is true: this IS the primary method** — the Playwright `filechooser` API in `## Browser Setup` does not exist in the in-page `javascript_tool`, so go straight here instead of attempting the file-chooser flow. Either way, this path requires the page execution environment to expose `File`, `DataTransfer`, `Uint8Array`, and `atob`; if those constructors are unavailable, use the file-chooser path or ask for manual upload. Verified working 2026-06-25 (job 476469, Agriculture and Agri-Food Canada) and 2026-06-26 in Claude in Chrome (TribalScale, jobs 476846 / 476849).
+1. Verify the page context:
+   - Confirm the tab is on WaterlooWorks and the visible page says `Submit Application`.
+   - Confirm the current step is `Application Options`.
+   - Confirm the application still refers to the expected job ID, title, and organization if this skill was called by a parent workflow.
+   - Confirm `*Cover Letter` is present or the required package contents include `Cover Letter`.
+
+2. Open the upload dialog:
+   - Scope actions to the cover-letter document section, not `Résumé`, `Grade Report`, or `Other - Per Job Posting`.
+   - Click `Upload New Cover Letter`.
+   - Verify a dialog or panel titled `Upload Cover Letter` appears.
+
+3. Fill the document name:
+   - Click the `Name` field.
+   - Fill it with `document_name`, usually the organization name from the application header.
+   - If the field already contains the desired name, leave it unchanged.
+
+4. Choose the PDF:
+   - Use the browser file-chooser flow as the source of truth: start `tab.playwright.waitForEvent("filechooser", { timeoutMs: 10000 })` before clicking a file input or associated upload control, then call `chooser.setFiles([coverletter_path])` with an absolute path.
+   - First try the dialog-scoped `input[type="file"]` / `#fileUpload_docUpload` when it is present and clickable.
+   - If the input is hidden, tiny, or does not emit a chooser, click the associated visible upload control after arming the chooser listener. On WaterlooWorks this can be `#btn_fileUploadDialog_docUpload`; if it opens a nested file-upload panel, arm a new chooser listener and click the visible `label[for="fileUpload_docUpload"]` / `Choose a file` label in that nested panel.
+   - Do not use `locator.setInputFiles(...)`; the documented upload API is `waitForEvent("filechooser")` followed by `chooser.setFiles(...)`.
+   - If the native macOS picker appears instead of the chooser API, press Cmd+Shift+G and paste the absolute `coverletter_path`, then choose the file and click `Open`. Use stable labels and the typed path, not raw screen coordinates.
+   - If neither the chooser API nor the native picker can be driven, use the `## Fallback — inject bytes via DataTransfer` section below.
+   - Wait until WaterlooWorks shows the chosen filename and the `Upload A Document` button is enabled.
+
+5. Upload and verify:
+   - NOTE: after the file is staged, a `Current File: …` row appears in the dialog and pushes the `Upload A Document` button DOWN. Re-screenshot / re-locate the button before clicking — clicking its pre-staging position will miss and hit empty space.
+   - Click `Upload A Document`.
+   - Wait for the upload dialog to close or for the application options page to regain focus.
+   - Verify the cover-letter section now shows the uploaded file, such as `Current File: <Company>-coverletter.pdf`, a `Quick View` control for the cover letter, or a new cover-letter document row.
+   - Verify the uploaded cover letter is selected. WaterlooWorks may auto-select the uploaded row in some flows, but it may also leave the new row unselected. Check the uploaded cover letter radio in the DOM; if it is unchecked, click the uploaded cover letter's radio/row and verify it is `checked` (and that no other cover-letter option is selected) before handing back. A finished-looking upload that still blocks submission is often this missing selection.
+   - Return control to the parent workflow. Do not click `Submit` or `Next` from this skill unless the parent workflow explicitly instructs you to continue after verification.
+
+## Fallback — inject bytes via DataTransfer
+
+Use this only if the file-chooser path in Step 4 (dialog file input, associated visible controls, nested `Choose a file` label, and native picker) has genuinely failed, AND the page exposes `File`, `DataTransfer`, `Uint8Array`, and `atob`. If those constructors are unavailable, stop and ask for manual upload.
 
 Run from the open `Upload Cover Letter` dialog (after clicking `Upload New Cover Letter`):
 
@@ -66,7 +96,7 @@ Run from the open `Upload Cover Letter` dialog (after clicking `Upload New Cover
 
    A one-page letter (~4 KB) becomes ~5 KB of base64 — small enough to embed inline in the JS string below. For a larger file, write the base64 to a temp file and read it into the snippet.
 
-2. Execute this in the WaterlooWorks application tab via the browser extension's JavaScript-execution tool (the Codex extension's JavaScript-execution tool). It decodes the bytes into a real `File`, assigns it to the hidden Orbis file input through a `DataTransfer`, fires the events the widget listens for, and sets the document name:
+2. Execute this in the WaterlooWorks application tab via the Codex extension's JavaScript-execution tool. It decodes the bytes into a real `File`, assigns it to the hidden Orbis file input through a `DataTransfer`, fires the events the widget listens for, and sets the document name:
 
    ```js
    const b64 = "<paste the base64 string here>";
@@ -94,44 +124,9 @@ Run from the open `Upload Cover Letter` dialog (after clicking `Upload New Cover
    - If `#fileUpload_docUpload` is not present, find the dialog's `input[type=file]` (Orbis class `orbisFileUpload file-upload`) and use its id; the name field is `#docName`.
    - Confirm the returned `files` is `1` and `size` matches the local file's byte count before continuing.
 
-3. The dialog now shows `Current File: …`. Click `Upload A Document` exactly as in the primary flow — WaterlooWorks issues its own multipart POST to `jobs.htm` (carrying the logged-in session and CSRF token), so you never hand-craft an HTTP request. Then verify the cover-letter section shows the uploaded document and verify whether its radio is selected (see step 5).
+3. The dialog now shows `Current File: …`. Click `Upload A Document` exactly as in Step 5 — WaterlooWorks issues its own multipart POST to `jobs.htm` (carrying the logged-in session and CSRF token), so you never hand-craft an HTTP request. Then verify the cover-letter section shows the uploaded document and verify whether its radio is selected (Step 5).
 
-**Why it works:** the extension's `file_upload` is sandboxed to session-shared files, and page JS cannot construct a `File` from a disk *path*. But page JS *can* construct a `File` from *bytes* (which the agent supplies via base64) and assign it through `DataTransfer.files`. Letting WaterlooWorks' own handler send the request avoids reverse-engineering the upload endpoint, field names, or CSRF token.
-
-## Workflow
-
-1. Verify the page context:
-   - Confirm the tab is on WaterlooWorks and the visible page says `Submit Application`.
-   - Confirm the current step is `Application Options`.
-   - Confirm the application still refers to the expected job ID, title, and organization if this skill was called by a parent workflow.
-   - Confirm `*Cover Letter` is present or the required package contents include `Cover Letter`.
-
-2. Open the upload dialog:
-   - Scope actions to the cover-letter document section, not `Résumé`, `Grade Report`, or `Other - Per Job Posting`.
-   - Click `Upload New Cover Letter`.
-   - Verify a dialog or panel titled `Upload Cover Letter` appears.
-
-3. Fill the document name:
-   - Click the `Name` field.
-   - Fill it with `document_name`, usually the organization name from the application header.
-   - If the field already contains the desired name, leave it unchanged.
-
-4. Choose the PDF:
-   - Use the browser file-chooser flow as the source of truth: start `tab.playwright.waitForEvent("filechooser", { timeoutMs: 10000 })` before clicking a file input or associated upload control, then call `chooser.setFiles([coverletter_path])` with an absolute path.
-   - First try the dialog-scoped `input[type="file"]` / `#fileUpload_docUpload` when it is present and clickable.
-   - If the input is hidden, tiny, or does not emit a chooser, click the associated visible upload control after arming the chooser listener. On WaterlooWorks this can be `#btn_fileUploadDialog_docUpload`; if it opens a nested file-upload panel, arm a new chooser listener and click the visible `label[for="fileUpload_docUpload"]` / `Choose a file` label in that nested panel.
-   - Do not use `locator.setInputFiles(...)`; the documented upload API is `waitForEvent("filechooser")` followed by `chooser.setFiles(...)`.
-   - If the native macOS picker appears instead of the chooser API, press Cmd+Shift+G and paste the absolute `coverletter_path`, then choose the file and click `Open`. Use stable labels and the typed path, not raw screen coordinates.
-   - In **Claude in Chrome**, do not attempt the chooser/native-picker steps above at all — use the `## Inject bytes via DataTransfer` method directly. In Codex/Playwright, if neither the chooser API nor the native picker can be driven and page JS exposes the required constructors, fall back to that same section. If those constructors are missing, ask for manual upload.
-   - Wait until WaterlooWorks shows the chosen filename and the `Upload A Document` button is enabled.
-
-5. Upload and verify:
-   - NOTE: after the file is staged, a `Current File: …` row appears in the dialog and pushes the `Upload A Document` button DOWN. Re-screenshot / re-locate the button before clicking — clicking its pre-staging position will miss and hit empty space.
-   - Click `Upload A Document`.
-   - Wait for the upload dialog to close or for the application options page to regain focus.
-   - Verify the cover-letter section now shows the uploaded file, such as `Current File: <Company>-coverletter.pdf`, a `Quick View` control for the cover letter, or a new cover-letter document row.
-   - Verify the uploaded cover letter is selected. WaterlooWorks may auto-select the uploaded row in some flows, but it may also leave the new row unselected. Check the uploaded cover letter radio in the DOM; if it is unchecked, click the uploaded cover letter's radio/row and verify it is `checked` (and that no other cover-letter option is selected) before handing back. A finished-looking upload that still blocks submission is often this missing selection.
-   - Return control to the parent workflow. Do not click `Submit` or `Next` from this skill unless the parent workflow explicitly instructs you to continue after verification.
+**Why it works:** page JS cannot construct a `File` from a disk *path*, but it *can* construct one from *bytes* (supplied via base64) and assign it through `DataTransfer.files`. Letting WaterlooWorks' own handler send the request avoids reverse-engineering the upload endpoint, field names, or CSRF token.
 
 ## Failure Handling
 
@@ -139,4 +134,4 @@ Run from the open `Upload Cover Letter` dialog (after clicking `Upload New Cover
 - If the file is too large or not a PDF, stop and report the file validation issue.
 - If `Upload New Cover Letter` is missing but `Select Existing Cover Letter` is available, do not guess an existing document unless the user explicitly asked to use it.
 - If WaterlooWorks shows `Other - Per Job Posting` as required, stop; this skill only handles `Cover Letter`.
-- If the chooser path through the input, associated visible controls, nested `Choose a file` label, and native-picker path all fail (or you are in Claude in Chrome, where they do not apply), use the `## Inject bytes via DataTransfer` method — only when the page exposes `File`, `DataTransfer`, `Uint8Array`, and `atob`. If those constructors are unavailable, stop and ask for manual upload.
+- If the chooser path (input, associated visible controls, nested `Choose a file` label, and native picker) all fail, use the `## Fallback — inject bytes via DataTransfer` section — only when the page exposes `File`, `DataTransfer`, `Uint8Array`, and `atob`. If those constructors are unavailable, stop and ask for manual upload.
