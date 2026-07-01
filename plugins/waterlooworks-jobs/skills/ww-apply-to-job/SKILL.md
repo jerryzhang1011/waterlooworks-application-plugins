@@ -70,7 +70,7 @@ If the workflow pauses for a pre-screening answer or other required user input, 
 - Verify the tab still shows `Submit Application` and the requested `job_id` before continuing from the visible step instead of restarting the job search or clicking `Apply` again.
 - If the application tab closed itself after a successful action such as `Done`, claim the remaining search-results tab and verify the row state there.
 - **Detect a silent mid-batch logout:** the session can drop without warning during a submit. Symptoms: the application tab navigates to `notLoggedIn.htm`, and/or other WaterlooWorks tabs hang on `Loading…` forever or show pagination `/NaN`. If you see these, run `.claude/skills/ww-login/SKILL.md` once to restore the session. Stop and ask the user only if `ww-login` reaches credentials, SSO/MFA, CAPTCHA, or loops back to logged-out state.
-- **Verify before re-submitting:** reaching the `Confirmation` step is NOT proof of success if the session died at submit. After any interruption, re-search the in-flight `job_id` and check for the `Application Submitted` badge. Re-run the application only if the badge is absent; never assume a submit landed.
+- **The `Confirmation` screen is proof — verify only when you did NOT see it:** the `Confirmation` screen showing "Your application package for Job ID <job_id> has been submitted on <date>" means the submit landed — trust it and finish, no re-search needed. Only re-search the in-flight `job_id` for an `Application Submitted` badge when the session dropped BEFORE that screen rendered (e.g. the tab went to `notLoggedIn.htm` or hung at submit) and you never saw the submitted message. Re-run the application only if the badge is absent; never re-submit a job whose confirmation screen you already saw.
 
 ## Workflow
 
@@ -142,7 +142,7 @@ If the workflow pauses for a pre-screening answer or other required user input, 
    - When WaterlooWorks enables `Submit`, verify locally that the page still refers to the requested job ID, job title, organization, deadline, and selected resume, then click `Submit` without asking the user for an extra confirmation.
    - If a confirmation step or modal appears, verify it still refers to the same job ID and selected package, then complete the final confirm/submit action without asking the user again.
    - Stop before submitting only when the page shows a different job, a different resume/package, an unexpected required document or answer, a login/CAPTCHA, or an external employer application form that the user did not separately ask to complete.
-   - Verify success by looking for the `Confirmation` screen ("Your application package for Job ID <job_id> has been submitted on <date>"), an `Application Submitted` badge on the posting, a row that now shows `Cancel Application`, or another clear submitted/applied state.
+   - The `Confirmation` screen is definitive success: once the page shows "Your application package for Job ID <job_id> has been submitted on <date>", the application is complete. Click `Done` to finish (this closes the application tab) — do NOT re-search the posting or hunt for an `Application Submitted` badge as extra verification.
    - Report the final state succinctly. If `direct_employer_apply_link` was found, paste it in the chat with a clear note that the posting also requires applying directly to the employer.
 
 ## Stable Labels From Recording
