@@ -29,10 +29,10 @@ Output when present:
 
 ## User Input Logging
 
-Whenever this skill asks the user for input, record the exact question and exact answer after the user replies. Do not edit the log file directly. Use the bundled helper:
+Whenever this skill asks the user for input, record the exact question and exact answer after the user replies. Do not edit the log file directly. Use the bundled helper — it lives in this skill's own `scripts/` directory. Resolve `<skill dir>` to the absolute path shown as "Base directory for this skill:" when this skill loads. (Under a plugin install that path is inside the plugin cache; a literal `.codex/skills/…` path is only correct for a local repo checkout, so do not hardcode it.)
 
 ```bash
-python3 .codex/skills/ww-apply-to-job/scripts/question_log.py add \
+python3 "<skill dir>/scripts/question_log.py" add \
   --question "exact question shown to the user" \
   --answer "exact user answer" \
   --job-id "<job_id>" \
@@ -40,7 +40,7 @@ python3 .codex/skills/ww-apply-to-job/scripts/question_log.py add \
 ```
 
 - Run the command from the chat's starting/current working directory so the default log file is saved there as `.codex_user_input_log.jsonl`. In this workspace, that directory is the project root — the folder that contains `jds/`, `resume/`, and `coverletter-config.json`.
-- To inspect recorded inputs, run `python3 .codex/skills/ww-apply-to-job/scripts/question_log.py list` from the same directory.
+- To inspect recorded inputs, run `python3 "<skill dir>/scripts/question_log.py" list` from the same directory.
 - To correct an entry, use the script's `update --id ...` command. Do not manually edit `.codex_user_input_log.jsonl`.
 - Record only user-provided answers. Do not invent or infer citizenship, work authorization, eligibility, demographic, or other personal answers.
 
@@ -113,8 +113,8 @@ If the workflow pauses for a pre-screening answer or other required user input, 
    - If a `Pre-Screening Questions` step appears, answer only from explicit user-provided `prescreen_answers`.
    - Scope pre-screening controls to the visible question on the current step. WaterlooWorks may keep hidden application-option selects in the DOM before the `Application Options` step, so do not target a broad `select` locator without checking visibility and question context.
    - If there are multiple `select` elements, identify the visible pre-screening select by checking bounding boxes and option labels. Hidden application document selects may already be in the DOM and must not be targeted.
-   - Before asking the user, check the prior log for an already-answered version of this question: run `python3 .codex/skills/ww-apply-to-job/scripts/question_log.py list` and look for an entry whose `question` text matches (ignore the `job_id` — it will differ across postings). If the question is about the applicant's own circumstances (co-op sequence/8-month commitment, work authorization confirmed earlier, remote/in-office availability, relocation radius, etc.) and the text matches an earlier entry, reuse that recorded answer silently instead of re-asking. Only treat a logged answer as job-specific (and re-ask) when the question embeds details that genuinely vary by posting, such as a specific office city or a posting-unique skill claim.
-   - If any answer is missing, ask the user for the exact answer and wait. After the user answers, record the question and answer with `scripts/question_log.py add` before using the answer in WaterlooWorks. When you reuse a prior logged answer without asking, do not add a duplicate log entry.
+   - Before asking the user, check the prior log for an already-answered version of this question: run `python3 "<skill dir>/scripts/question_log.py" list` and look for an entry whose `question` text matches (ignore the `job_id` — it will differ across postings). If the question is about the applicant's own circumstances (co-op sequence/8-month commitment, work authorization confirmed earlier, remote/in-office availability, relocation radius, etc.) and the text matches an earlier entry, reuse that recorded answer silently instead of re-asking. Only treat a logged answer as job-specific (and re-ask) when the question embeds details that genuinely vary by posting, such as a specific office city or a posting-unique skill claim.
+   - If any answer is missing, ask the user for the exact answer and wait. After the user answers, record the question and answer with `<skill dir>/scripts/question_log.py add` before using the answer in WaterlooWorks. When you reuse a prior logged answer without asking, do not add a duplicate log entry.
    - Continue with `Next` only after required questions have been answered.
 
 6. Configure application options:
@@ -126,8 +126,10 @@ If the workflow pauses for a pre-screening answer or other required user input, 
 7. Enforce this skill's document scope:
    - Treat `Cover Letter` and `Other - Per Job Posting` as required if they appear with a leading `*`, are listed in the required package contents, or WaterlooWorks blocks submission until they are selected.
    - If `Cover Letter` is required, get the PDF in place before touching the document controls:
-     1. **Generate it in a sub-agent.** Spawn a sub-agent that follows `.codex/skills/ww-write-cover-letter/SKILL.md` for this posting, passing the job ID and the résumé this application uses (`resume_name`, i.e. `resume/<resume_name>.pdf`). It writes `coverletter/<Company>-coverletter.pdf`. Delegating to a sub-agent keeps your browser-application context focused while it does the JD/résumé reading and drafting. (Skip regeneration if the user supplied `coverletter_path`, or a current `coverletter/<Company>-coverletter.pdf` for this company already exists.)
-     2. **Upload it.** Load and follow `.codex/skills/ww-upload-cover-letter/SKILL.md` with `coverletter_path` set to the path the sub-agent reports.
+     1. **Generate it in a sub-agent.** Spawn a sub-agent that follows the `ww-write-cover-letter` skill for this posting, passing the résumé this application uses (`resume_name`, i.e. `resume/<resume_name>.pdf`). It writes `coverletter/<Company>-coverletter.pdf`. Delegating to a sub-agent keeps your browser-application context focused while it does the JD/résumé reading and drafting.
+        - **Give it the JD the right way:** if a JD file for this job ID already exists under `jds/`, just pass the job ID — the sub-agent reads it locally. If it does NOT (e.g. you applied by ID directly and never scraped this posting), the sub-agent can neither see your browser nor find a local file, so extract the JD text from the open posting and pass that text/facts in the prompt. Do not pass raw JD text when the `jds/` file already exists — let the sub-agent read the file.
+        - Skip regeneration entirely if the user supplied `coverletter_path`, or a current `coverletter/<Company>-coverletter.pdf` for this company already exists.
+     2. **Upload it.** Load and follow the `ww-upload-cover-letter` skill with `coverletter_path` set to the path the sub-agent reports.
    - After invoking `ww-upload-cover-letter`, verify the cover-letter section shows the uploaded/current file before selecting the remaining documents.
    - If `Other - Per Job Posting` is required, stop and tell the user this workflow does not handle that document type yet.
    - If optional `Cover Letter` or `Other - Per Job Posting` upload/select controls appear with no required marker, leave them blank unless the user explicitly asked to include one.
