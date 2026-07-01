@@ -19,15 +19,15 @@ A plugin that automates the WaterlooWorks application workflow for **any Univers
 
 The easiest path is to let your AI assistant set everything up — see the [repo README](../../README.md) for a copy-paste prompt.
 
-To install manually once the repo is cloned locally:
-
-**Codex**
+Add the marketplace by sending Codex this prompt:
+```text
+Add the marketplace jerryzhang1011/waterlooworks-application-plugins
 ```
-codex plugin marketplace add /path/to/waterlooworks-application-plugins
-```
-Then open `/plugins`, find **WaterlooWorks Jobs**, and install it (make sure it's enabled). Codex resolves this plugin through [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json).
+Then open **Plugins → Personal**, select **WaterlooWorks Jobs**, and click **Install** (make sure it's enabled). Codex resolves this plugin through [`.agents/plugins/marketplace.json`](../../.agents/plugins/marketplace.json).
 
-Reload so the skills register.
+## Update or remove
+
+Update: `codex plugin marketplace update jerryzhang1011/waterlooworks-application-plugins`, then reinstall from **Plugins → Personal** if prompted. Uninstall: open **Plugins → Personal**, select **WaterlooWorks Jobs**, and choose **Uninstall** (or disable it to keep it but turn it off).
 
 ## First-time configuration
 

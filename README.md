@@ -22,11 +22,11 @@ Quick version — type these two commands in Claude Code:
 
 #### 🟢 I use Codex → **[Install on Codex](docs/install-codex.md)**
 
-Quick version — add the marketplace, then install from the plugin browser:
+Quick version — copy this prompt to codex:
 ```text
-codex plugin marketplace add jerryzhang1011/waterlooworks-application-plugins
+Add the marketplace jerryzhang1011/waterlooworks-application-plugins
 ```
-then run `/plugins`, open **WaterlooWorks Jobs**, and click **Install**.
+then open **Plugins** -> **Personal** and click **Install**.
 
 ### Step 2: Then: finish setup (works the same on both codex and claude)
 
