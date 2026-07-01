@@ -90,7 +90,22 @@ Codex — then `@chrome` is enabled.
 Your capability check, not the checker's `installed: null`, is the source of truth for
 this dependency.
 
-## Step 5 — Verify and report
+## Step 5 — Create the working folders
+
+The skills read and write three folders in the project root. `ww-scrape-jobs` and
+`ww-write-cover-letter` create `jds/` and `coverletter/` lazily, but `resume/` is never
+auto-created and the apply/cover-letter skills expect a résumé PDF to already be there.
+Create all three up front so the user has somewhere to drop their résumé. This is
+idempotent — `-p` leaves existing folders (and their contents) untouched:
+
+```bash
+mkdir -p resume coverletter jds
+```
+
+Then remind the user to put their résumé PDF in `resume/` (e.g. `resume/ai.pdf`) — the
+skills tailor cover letters and pick the application document from there.
+
+## Step 6 — Verify and report
 
 Re-run the checker (Step 1) to confirm the `light`/`heavy` items now show as installed.
 Then give the user a short, honest summary grouped by outcome — for example:
@@ -98,6 +113,7 @@ Then give the user a short, honest summary grouped by outcome — for example:
 > Project initialized:
 > - ✅ Installed: reportlab
 > - ✅ Already present: python3 (3.13), node (v22)
+> - ✅ Folders ready: resume/, coverletter/, jds/ (drop your résumé PDF in resume/)
 > - ✅ Connected: Codex `@chrome` plugin (Chrome browser-control capability available)
 
 (If the Chrome capability was absent instead, that last line becomes
