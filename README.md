@@ -14,10 +14,9 @@ You don't need to know how to code. You point your AI coding assistant (Claude C
 
 #### 🟣 I use Claude Code → **[Install on Claude Code](docs/install-claude-code.md)**
 
-Quick version — type these two commands in Claude Code:
+Quick version — copy this prompt to Claude Code:
 ```text
-/plugin marketplace add jerryzhang1011/waterlooworks-application-plugins
-/plugin install waterlooworks-jobs@uwaterloo-jobs
+Add the marketplace jerryzhang1011/waterlooworks-application-plugins and install the waterlooworks-jobs plugin
 ```
 
 #### 🟢 I use Codex → **[Install on Codex](docs/install-codex.md)**

@@ -19,12 +19,9 @@ A plugin that automates the WaterlooWorks application workflow for **any Univers
 
 The easiest path is to let your AI assistant set everything up — see the [repo README](../../README.md) for a copy-paste prompt.
 
-To install manually once the repo is cloned locally:
-
-**Claude Code**
-```
-/plugin marketplace add /path/to/waterlooworks-application-plugins
-/plugin install waterlooworks-jobs@uwaterloo-jobs
+To install it yourself, send Claude Code this prompt:
+```text
+Add the marketplace jerryzhang1011/waterlooworks-application-plugins and install the waterlooworks-jobs plugin
 ```
 
 **Codex** — add the plugin referenced by `.agents/plugins/marketplace.json` in the cloned repo.
