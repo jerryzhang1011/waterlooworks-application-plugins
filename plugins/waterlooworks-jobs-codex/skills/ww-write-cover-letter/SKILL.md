@@ -25,9 +25,10 @@ The output is written to the **`coverletter/`** folder (created automatically) a
 Gather or infer these before generating:
 
 - **Job description** — accept any of: a WaterlooWorks job ID (e.g. `475135`), a path to a JD
-  file, or JD text pasted into chat. From it you need the **company/organization name**, the
-  **role title**, the **work term** (e.g. "Fall 2026"), and the key **responsibilities/skills**
-  to tailor toward.
+  file, JD text pasted into chat, or **JD details already in your context** (a calling skill or
+  agent passed the posting facts, or you read the posting earlier this session — no local file
+  needed). From it you need the **company/organization name**, the **role title**, the **work
+  term** (e.g. "Fall 2026"), and the key **responsibilities/skills** to tailor toward.
 - **Résumé** — which of the user's résumés to draw evidence from (`resume/ai.pdf`, `swe.pdf`,
   `frontend.pdf`, `backend.pdf`). If the user names one, use it. If not, check `ranks/shortlist.md`
   in the repo — it maps job IDs to the recommended résumé. If still ambiguous, ask.
@@ -66,9 +67,13 @@ exists, trust it.
 
 ## Step 1 — Gather the job facts
 
-- **Given a job ID**: find the posting with `ls jds/**/"<id>"*` or a search for
-  `<id> - *.md` under `jds/`. These files have a table with `Organization`, plus `Job Title`,
-  `Work Term`, and responsibilities/requirements sections. Read enough to tailor honestly.
+- **JD already in your context** (a caller passed the posting facts, or you read it earlier this
+  session): use it directly — do **not** go hunting for a local file. Only fall back to a `jds/`
+  lookup if the in-context info is missing a fact you need below.
+- **Given a job ID** (and it isn't already in context): find the posting with `ls jds/**/"<id>"*`
+  or a search for `<id> - *.md` under `jds/`. These files have a table with `Organization`, plus
+  `Job Title`, `Work Term`, and responsibilities/requirements sections. Read enough to tailor
+  honestly.
 - **Given a file path or pasted JD**: read it directly.
 - Pull out: company name (for the filename and the letter), role title, work term, and 2-4
   concrete things the role wants (technologies, domain, responsibilities, what the team values).
@@ -142,8 +147,8 @@ EOF
 
 ## Failure handling
 
-- **No JD found for the given ID**: list nearby matches under `jds/` and ask the user to confirm
-  the ID or paste the JD.
+- **No JD found for the given ID** (and none in context): list nearby matches under `jds/` and ask
+  the user to confirm the ID or paste the JD.
 - **Résumé ambiguous**: if neither the user nor `ranks/shortlist.md` indicates one, ask which résumé to use
   rather than guessing.
 - **Config missing required `name`**: stop and collect header details (Step 0).
