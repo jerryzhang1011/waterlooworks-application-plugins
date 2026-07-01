@@ -38,9 +38,7 @@ step simply:
 
 1. Run the ww-setup skill to check my computer and install any tools the skills need (ask me before anything big).
 
-2. Help me put my résumé PDF in a resume/ folder and create my coverletter-config.json, using the example files in this repo as a template (resume/example-resume.pdf and coverletter-config.example.json). Use MY real details — and remind me they stay on my computer and are never uploaded.
-
-3. Explain how to use this plugin
+2. Explain how to use this plugin
 ```
 
 That's it. After setup, you can just ask in plain English:
